@@ -6,7 +6,7 @@ import { RideNotAvailableError } from './errors/ride-not-available.error';
 
 @Injectable()
 export class GoogleMapsService extends MapsService {
-  private client: Client = new Client();
+  private readonly client: Client = new Client();
 
   async getRideInfo(origin: string, destination: string) {
     const response = await this.client.distancematrix({
@@ -29,5 +29,16 @@ export class GoogleMapsService extends MapsService {
     }
 
     return response.data;
+  }
+
+  async getRideCoordinates(address: string) {
+    const response = await this.client.geocode({
+      params: {
+        address,
+        key: process.env.GOOGLE_API_KEY,
+      },
+    });
+
+    return response.data.results[0].geometry.location;
   }
 }

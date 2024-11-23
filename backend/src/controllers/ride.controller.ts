@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
+import { ConfirmRideDto } from 'src/core/dtos/confirm-ride.dto';
 import { RideEstimateResponse } from 'src/core/dtos/estimate-ride-response.dto';
 import { EstimateRideDto } from 'src/core/dtos/estimate-ride.dto';
 import { RideUseCases } from 'src/use-cases/ride/ride.use-case';
@@ -12,5 +13,10 @@ export class RideController {
     @Body() estimateRideDto: EstimateRideDto,
   ): Promise<RideEstimateResponse> {
     return this.rideUseCases.estimateRide(estimateRideDto);
+  }
+
+  @Patch('confirm')
+  confirmRide(@Body() confirmRideDto: ConfirmRideDto) {
+    return confirmRideDto;
   }
 }
