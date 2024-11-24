@@ -10,9 +10,12 @@ NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=    # Add your Google Maps API key here
 ```
 
+Tenha o node 22 instalado.
+
+
 ## Rodando o projeto
 
 - Instale as dependências do projeto com o comando `npm install`.
 - Executar o comando `npm run dev` na raiz do diretório.
 
-O projeto estará disponível em http://localhost:3001 ou outra porta disponível.
+O projeto estará disponível em http://localhost:3001.
