@@ -21,7 +21,6 @@ export class RideUseCases {
 
   async getRideInfo(customerId: string, driverId?: string) {
     const rides = await this.rideDataService.getRideInfo(customerId, driverId);
-    console.log(rides);
     if (!rides || rides.length === 0) {
       throw new RidesNotFoundError();
     }
