@@ -18,4 +18,8 @@ export class DriverRepository {
   getDriverById(driverId: string): Promise<Driver | null> {
     return this.driverRepository.findById(driverId).exec();
   }
+
+  getAll() {
+    return this.driverRepository.find().exec();
+  }
 }
