@@ -16,7 +16,8 @@ export class RideController {
   }
 
   @Patch('confirm')
-  confirmRide(@Body() confirmRideDto: ConfirmRideDto) {
-    return confirmRideDto;
+  async confirmRide(@Body() confirmRideDto: ConfirmRideDto) {
+    await this.rideUseCases.confirmRide(confirmRideDto);
+    return { sucess: true };
   }
 }

@@ -1,23 +1,27 @@
 import { Type } from 'class-transformer';
 import {
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsString,
+  Validate,
   ValidateNested,
 } from 'class-validator';
+import { IsNotEqual } from '../shared/pipes/is-not-equal.pipe';
 class DriverConfirmRideDto {
   @IsNotEmpty()
+  @IsMongoId()
+  id: any;
+
   @IsString()
-  id: string;
   @IsNotEmpty()
-  @IsString()
   name: string;
 }
 
 export class ConfirmRideDto {
   @IsString()
   @IsNotEmpty()
-  customer_id: string;
+  customerId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -25,7 +29,13 @@ export class ConfirmRideDto {
 
   @IsString()
   @IsNotEmpty()
+  @Validate(IsNotEqual, ['origin'], {
+    message: 'Destination and origin cannot be the same',
+  })
   destination: string;
+
+  @IsNumber()
+  @IsNotEmpty()
   distance: number;
 
   @IsString()
@@ -37,7 +47,7 @@ export class ConfirmRideDto {
   @Type(() => DriverConfirmRideDto)
   driver: DriverConfirmRideDto;
 
-  @IsString()
   @IsNumber()
+  @IsNotEmpty()
   value: number;
 }

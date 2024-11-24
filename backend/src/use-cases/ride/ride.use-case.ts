@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { MapsService } from 'src/core/abstracts/maps.service';
+import { ConfirmRideDto } from 'src/core/dtos/confirm-ride.dto';
 import { RideEstimateResponse } from 'src/core/dtos/estimate-ride-response.dto';
 import { EstimateRideDto } from 'src/core/dtos/estimate-ride.dto';
 import { DriverRepository } from 'src/frameworks/data-services/driver.repository';
+import { RideRepository } from 'src/frameworks/data-services/ride.repository';
+import { DriverNotFoundError } from 'src/frameworks/maps-services/google/errors/driver-not-found.error';
+import { InvalidDistanceError } from 'src/frameworks/maps-services/google/errors/invalida-distance.error';
+import { RideFactoryService } from './ride-factory.service';
 
 @Injectable()
 export class RideUseCases {
   constructor(
     private routeService: MapsService,
     private driverDataService: DriverRepository,
+    private rideDataService: RideRepository,
+    private rideFactoryService: RideFactoryService,
   ) {}
 
   async estimateRide(
@@ -33,6 +40,26 @@ export class RideUseCases {
       routeResponse,
       options,
     };
+  }
+
+  async confirmRide(confirmRideDto: ConfirmRideDto) {
+    await this.validateDriverAndDistance(confirmRideDto);
+    const ride = this.rideFactoryService.createNewRide(confirmRideDto);
+    await this.rideDataService.createRide(ride);
+    return;
+  }
+
+  private async validateDriverAndDistance({
+    driver,
+    distance,
+  }: ConfirmRideDto) {
+    const driverEntity = await this.driverDataService.getDriverById(driver.id);
+    if (!driverEntity) {
+      throw new DriverNotFoundError();
+    }
+    if (distance < driverEntity.minimumDistance) {
+      throw new InvalidDistanceError();
+    }
   }
 
   private async getRideCoordinates(

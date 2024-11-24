@@ -14,4 +14,8 @@ export class DriverRepository {
       .find({ minimumDistance: { $lte: distance / 1000 } })
       .exec();
   }
+
+  getDriverById(driverId: string): Promise<Driver | null> {
+    return this.driverRepository.findById(driverId).exec();
+  }
 }
