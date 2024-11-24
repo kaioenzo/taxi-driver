@@ -18,6 +18,10 @@ export class RideRepository {
       query.driver = driverId;
     }
 
-    return this.rideModel.find(query).populate('driver').exec();
+    return this.rideModel
+      .find(query)
+      .populate('driver')
+      .sort({ createdAt: -1 })
+      .exec();
   }
 }

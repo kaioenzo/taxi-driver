@@ -15,5 +15,7 @@ export class Ride {
   duration: string;
   driver: Driver;
   value: number;
+  createdAt: Date;
+  updatedAt: Date;
   options: Driver[];
 }

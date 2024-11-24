@@ -4,7 +4,7 @@ import { Driver } from './driver.model';
 
 export type RideDocument = Ride & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Ride {
   @Prop({ required: true })
   customerId: string;

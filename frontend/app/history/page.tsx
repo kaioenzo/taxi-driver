@@ -40,6 +40,7 @@ export default function HistoryPage() {
 
         if (!response.ok) {
           showSnackbar("Erro ao obter histórico de viagens", "error");
+          setLoading(false);
           return;
         }
 
