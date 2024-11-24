@@ -6,7 +6,7 @@ import { Ride } from 'src/core/entities/ride.entity';
 export class RideFactoryService {
   createNewRide(confirmRideDto: ConfirmRideDto) {
     const newRide = new Ride();
-    newRide.customerId = confirmRideDto.customerId;
+    newRide.customerId = confirmRideDto.customer_id;
     newRide.origin = confirmRideDto.origin;
     newRide.destination = confirmRideDto.destination;
     newRide.distance = confirmRideDto.distance;

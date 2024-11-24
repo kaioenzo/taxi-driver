@@ -4,7 +4,7 @@ import { IsNotEqual } from '../shared/pipes/is-not-equal.pipe';
 export class EstimateRideDto {
   @IsNotEmpty()
   @IsString()
-  customerId: string;
+  customer_id: string;
 
   @IsNotEmpty()
   @IsString()

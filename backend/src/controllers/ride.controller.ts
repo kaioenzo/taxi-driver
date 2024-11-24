@@ -20,11 +20,11 @@ export class RideController {
 
   @Get(':customer_id')
   getRideInfo(
-    @Param('customer_id') customerId: string,
+    @Param('customer_id') customer_id: string,
     @Query('driver_id', new ValidateMongoIdPipe('INVALID_DRIVER'))
     driverId?: string,
   ) {
-    return this.rideUseCases.getRideInfo(customerId, driverId);
+    return this.rideUseCases.getRideInfo(customer_id, driverId);
   }
 
   @Post('estimate')

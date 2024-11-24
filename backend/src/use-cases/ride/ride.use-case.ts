@@ -19,13 +19,13 @@ export class RideUseCases {
     private rideFactoryService: RideFactoryService,
   ) {}
 
-  async getRideInfo(customerId: string, driverId?: string) {
-    const rides = await this.rideDataService.getRideInfo(customerId, driverId);
+  async getRideInfo(customer_id: string, driverId?: string) {
+    const rides = await this.rideDataService.getRideInfo(customer_id, driverId);
     if (!rides || rides.length === 0) {
       throw new RidesNotFoundError();
     }
     return {
-      customerId,
+      customer_id,
       rides,
     };
   }

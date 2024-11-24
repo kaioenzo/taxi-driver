@@ -21,7 +21,7 @@ class DriverConfirmRideDto {
 export class ConfirmRideDto {
   @IsString()
   @IsNotEmpty()
-  customerId: string;
+  customer_id: string;
 
   @IsString()
   @IsNotEmpty()
