@@ -1,18 +1,19 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { RideHistory } from "../core/dtos/RideHistoryDto";
 import { RideList } from "./components/RideList";
 import { RideHistoryForm } from "./components/RideHistoryForm";
 import { useSnackbar } from "@/components/shared/SnackBarContext";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export default function HistoryPage() {
+function HistoryComponent() {
   const [rideEstimate, setRideEstimate] = useState<RideHistory | undefined>(
     undefined
   );
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
 
-  const searchParams = useSearchParams();
   const showSnackbar = useSnackbar();
 
   const driverId = searchParams.get("driverId");
@@ -27,7 +28,7 @@ export default function HistoryPage() {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/ride/${customerId}${
+          `${BACKEND_URL}/ride/${customerId}${
             driverId === null ? "" : `?driver_id=${driverId}`
           }`,
           {
@@ -71,5 +72,13 @@ export default function HistoryPage() {
         {rideEstimate && <RideList rides={rideEstimate.rides} />}
       </div>
     </div>
+  );
+}
+
+export default function HistoryPage() {
+  return (
+    <Suspense>
+      <HistoryComponent />
+    </Suspense>
   );
 }

@@ -1,30 +1,30 @@
 export class RideEstimate {
-  origin: {
+  origin!: {
     lat: number;
     lng: number;
   };
-  destination: {
+  destination!: {
     lat: number;
     lng: number;
   };
-  distance: number;
-  duration: string;
-  routeResponse: {
+  distance!: number;
+  duration!: string;
+  routeResponse!: {
     destination_addresses: string[];
     origin_addresses: string[];
     status: string;
   };
-  options: Driver[];
+  options!: Driver[];
 }
 
 export class Driver {
-  _id: string;
-  name: string;
-  description: string;
-  vehicle: string;
-  value: number;
-  minimumDistance: number;
-  review: {
+  _id!: string;
+  name!: string;
+  description!: string;
+  vehicle!: string;
+  value!: number;
+  minimumDistance!: number;
+  review!: {
     rating: number;
     comment: string;
   };

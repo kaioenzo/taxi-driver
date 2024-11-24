@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { RideEstimate } from "../core/dtos/RideEstimateDto";
 import { RideDirections } from "./components/RideMap";
 import { RideSummary } from "./components/RideSummary";
@@ -11,8 +11,9 @@ import Link from "next/link";
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export default function OptionsPage() {
+function OptionsComponent() {
   const searchParams = useSearchParams();
   const [rideEstimate, setRideEstimate] = useState<RideEstimate | undefined>(
     undefined
@@ -31,7 +32,7 @@ export default function OptionsPage() {
     const estimateRide = async () => {
       try {
         const data = { origin, destination, customer_id: customerId };
-        const response = await fetch("http://localhost:3000/ride/estimate", {
+        const response = await fetch(`${BACKEND_URL}/ride/estimate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +70,7 @@ export default function OptionsPage() {
       );
       if (!driver) throw new Error("Driver not found");
 
-      const response = await fetch("http://localhost:3000/ride/confirm", {
+      const response = await fetch(`${BACKEND_URL}/ride/confirm`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -157,5 +158,13 @@ export default function OptionsPage() {
         </div>
       </div>
     </APIProvider>
+  );
+}
+
+export default function OptionsPage() {
+  return (
+    <Suspense>
+      <OptionsComponent />
+    </Suspense>
   );
 }

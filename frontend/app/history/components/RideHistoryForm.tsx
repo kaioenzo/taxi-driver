@@ -11,6 +11,7 @@ interface RideHistoryForm {
   customerId: string;
   driverId: string;
 }
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export function RideHistoryForm() {
   const [selectedDriver, setSelectedDriver] = useState<string | undefined>(
@@ -28,7 +29,7 @@ export function RideHistoryForm() {
   useEffect(() => {
     const getDrivers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/driver", {
+        const response = await fetch(`${BACKEND_URL}/driver`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +51,7 @@ export function RideHistoryForm() {
 
   const onSubmit = async (data: RideHistoryForm) => {
     const driverId = selectedDriver;
-    const url = `http://localhost:3001/history?customerId=${data.customerId}${
+    const url = `${window.origin}/history?customerId=${data.customerId}${
       driverId ? `&driverId=${driverId}` : ""
     }`;
     router.push(url);
