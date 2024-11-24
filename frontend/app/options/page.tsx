@@ -2,12 +2,15 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RideEstimate } from "../core/dtos/RideEstimateDto";
-import { RideMap } from "./components/RideMap";
+import { RideDirections } from "./components/RideMap";
 import { RideSummary } from "./components/RideSummary";
 import { DriversList } from "./components/DriverList";
 import { useSnackbar } from "@/components/shared/SnackBarContext";
 import { Button } from "@/components/shared/Button";
 import Link from "next/link";
+import { APIProvider, Map } from "@vis.gl/react-google-maps";
+
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function OptionsPage() {
   const searchParams = useSearchParams();
@@ -98,6 +101,10 @@ export default function OptionsPage() {
     }
   };
 
+  if (!API_KEY) {
+    throw new Error("API_KEY is not set");
+  }
+
   if (loading) {
     return <div className="text-center py-10">Carregando...</div>;
   }
@@ -115,35 +122,40 @@ export default function OptionsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Escolha sua viagem</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <RideMap
-            origin={rideEstimate.origin}
-            destination={rideEstimate.destination}
-          />
-          <RideSummary
-            distance={rideEstimate.distance}
-            duration={rideEstimate.duration}
-          />
-        </div>
-        <div>
-          <DriversList
-            drivers={rideEstimate.options}
-            onSelectDriver={handleDriverSelect}
-            selectedDriverId={selectedDriverId}
-            handleConfirmRide={handleConfirmRide}
-          />
-          {/* <button
-            onClick={handleConfirmRide}
-            disabled={!selectedDriverId}
-            className="w-full mt-4 bg-blue-500 text-white py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            Confirmar Viagem
-          </button> */}
+    <APIProvider apiKey={API_KEY}>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">Escolha sua viagem</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <RideSummary
+              distance={rideEstimate.distance}
+              duration={rideEstimate.duration}
+            />
+            {rideEstimate && (
+              <Map
+                defaultCenter={rideEstimate.origin}
+                defaultZoom={6}
+                gestureHandling={"greedy"}
+              >
+                <RideDirections
+                  origin={rideEstimate.routeResponse.origin_addresses[0]}
+                  destination={
+                    rideEstimate.routeResponse.destination_addresses[0]
+                  }
+                />
+              </Map>
+            )}
+          </div>
+          <div>
+            <DriversList
+              drivers={rideEstimate.options}
+              onSelectDriver={handleDriverSelect}
+              selectedDriverId={selectedDriverId}
+              handleConfirmRide={handleConfirmRide}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </APIProvider>
   );
 }
