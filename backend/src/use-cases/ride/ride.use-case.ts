@@ -5,8 +5,9 @@ import { RideEstimateResponse } from 'src/core/dtos/estimate-ride-response.dto';
 import { EstimateRideDto } from 'src/core/dtos/estimate-ride.dto';
 import { DriverRepository } from 'src/frameworks/data-services/driver.repository';
 import { RideRepository } from 'src/frameworks/data-services/ride.repository';
-import { DriverNotFoundError } from 'src/frameworks/maps-services/google/errors/driver-not-found.error';
-import { InvalidDistanceError } from 'src/frameworks/maps-services/google/errors/invalida-distance.error';
+import { DriverNotFoundError } from 'src/use-cases/ride/errors/driver-not-found.error';
+import { InvalidDistanceError } from 'src/use-cases/ride/errors/invalid-distance.error';
+import { RidesNotFoundError } from './errors/rides-not-found.error';
 import { RideFactoryService } from './ride-factory.service';
 
 @Injectable()
@@ -18,6 +19,18 @@ export class RideUseCases {
     private rideFactoryService: RideFactoryService,
   ) {}
 
+  async getRideInfo(customerId: string, driverId?: string) {
+    const rides = await this.rideDataService.getRideInfo(customerId, driverId);
+    console.log(rides);
+    if (!rides || rides.length === 0) {
+      throw new RidesNotFoundError();
+    }
+    return {
+      customerId,
+      rides,
+    };
+  }
+
   async estimateRide(
     estimateRideDto: EstimateRideDto,
   ): Promise<RideEstimateResponse> {
@@ -27,7 +40,7 @@ export class RideUseCases {
     );
     const { distance, duration } = rows[0].elements[0];
 
-    const options = await this.getDriversAvailable(distance.value);
+    const options = await this.getDriversAvailableByValueASC(distance.value);
     const { origin, destination } = await this.routeService.getRideCoordinates(
       routeResponse.origin_addresses[0],
       routeResponse.destination_addresses[0],
@@ -62,7 +75,7 @@ export class RideUseCases {
     }
   }
 
-  private async getDriversAvailable(distance: number) {
+  private async getDriversAvailableByValueASC(distance: number) {
     const options = await this.driverDataService.getDriversAvailable(distance);
 
     options.forEach((option) => {

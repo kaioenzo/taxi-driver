@@ -10,4 +10,14 @@ export class RideRepository {
   createRide(ride: Ride) {
     return this.rideModel.create(ride);
   }
+
+  getRideInfo(customerId: string, driverId: string): Promise<Ride[]> {
+    const query: any = { customerId };
+
+    if (driverId) {
+      query.driver = driverId;
+    }
+
+    return this.rideModel.find(query).populate('driver').exec();
+  }
 }
