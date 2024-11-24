@@ -2,6 +2,7 @@ import React from "react";
 import Script from "next/script";
 // These styles apply to every route in the application
 import "./globals.css";
+import { NavBar } from "@/components/shared/NavBar";
 
 export default function RootLayout({
   children,
@@ -16,7 +17,10 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <NavBar />
+        {children}
+      </body>
     </html>
   );
 }

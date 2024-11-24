@@ -3,6 +3,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RideHistory } from "../core/dtos/RideHistoryDto";
 import { RideList } from "./components/RideList";
+import { RideHistoryForm } from "./components/RideHistoryForm";
+import { Button } from "@/components/shared/Button";
 
 export default function HistoryPage() {
   const [rideEstimate, setRideEstimate] = useState<RideHistory | undefined>(
@@ -17,6 +19,11 @@ export default function HistoryPage() {
 
   useEffect(() => {
     const getRideHistory = async () => {
+      if (!customerId) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(
           `http://localhost:3000/ride/${customerId}${
@@ -49,20 +56,14 @@ export default function HistoryPage() {
     return <div className="text-center py-10">Carregando...</div>;
   }
 
-  if (!rideEstimate) {
-    return (
-      <div className="text-center py-10">
-        Houve um erro ao carregar seu histórido de viagens. Por favor tente
-        novamente mais tarde.
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Histórico de viagens</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Histórico de viagens
+      </h1>
       <div>
-        <RideList rides={rideEstimate.rides} />
+        <RideHistoryForm customerId={customerId} />
+        {rideEstimate && <RideList rides={rideEstimate.rides} />}
       </div>
     </div>
   );
