@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { RideHistory } from "../core/dtos/RideHistoryDto";
 import { RideList } from "./components/RideList";
 import { RideHistoryForm } from "./components/RideHistoryForm";
-import { Button } from "@/components/shared/Button";
 
 export default function HistoryPage() {
   const [rideEstimate, setRideEstimate] = useState<RideHistory | undefined>(
@@ -62,7 +61,7 @@ export default function HistoryPage() {
         Histórico de viagens
       </h1>
       <div>
-        <RideHistoryForm customerId={customerId} />
+        <RideHistoryForm />
         {rideEstimate && <RideList rides={rideEstimate.rides} />}
       </div>
     </div>
