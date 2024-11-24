@@ -31,14 +31,24 @@ export class GoogleMapsService extends MapsService {
     return response.data;
   }
 
-  async getRideCoordinates(address: string) {
-    const response = await this.client.geocode({
+  async getRideCoordinates(originAdress: string, destinationAdress: string) {
+    const originResponse = await this.client.geocode({
       params: {
-        address,
+        address: originAdress,
         key: process.env.GOOGLE_API_KEY,
       },
     });
 
-    return response.data.results[0].geometry.location;
+    const destinationResponse = await this.client.geocode({
+      params: {
+        address: destinationAdress,
+        key: process.env.GOOGLE_API_KEY,
+      },
+    });
+
+    return {
+      origin: originResponse.data.results[0].geometry.location,
+      destination: destinationResponse.data.results[0].geometry.location,
+    };
   }
 }
