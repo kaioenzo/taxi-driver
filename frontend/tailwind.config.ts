@@ -11,6 +11,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        successBg: "#4caf50",
+        errorBg: "#f44336",
+        warningBg: "#ff9800",
+        infoBg: "#2196f3",
       },
     },
   },

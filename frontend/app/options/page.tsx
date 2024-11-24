@@ -5,6 +5,9 @@ import { RideEstimate } from "../core/dtos/RideEstimateDto";
 import { RideMap } from "./components/RideMap";
 import { RideSummary } from "./components/RideSummary";
 import { DriversList } from "./components/DriverList";
+import { useSnackbar } from "@/components/shared/SnackBarContext";
+import { Button } from "@/components/shared/Button";
+import Link from "next/link";
 
 export default function OptionsPage() {
   const searchParams = useSearchParams();
@@ -15,6 +18,7 @@ export default function OptionsPage() {
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
 
   const router = useRouter();
+  const showSnackbar = useSnackbar();
 
   const origin = searchParams.get("origin");
   const destination = searchParams.get("destination");
@@ -39,13 +43,15 @@ export default function OptionsPage() {
         const estimate: RideEstimate = await response.json();
         setRideEstimate(estimate);
         setLoading(false);
+        showSnackbar("Viagem estimada com sucesso!", "info");
       } catch (error) {
         console.error("Error estimating ride:", error);
+        showSnackbar("Erro ao estimar viagem", "error");
         setLoading(false);
       }
     };
     estimateRide();
-  }, [origin, destination, customerId]);
+  }, [origin, destination, customerId, showSnackbar]);
 
   const handleDriverSelect = (driverId: string) => {
     setSelectedDriverId(driverId);
@@ -80,12 +86,15 @@ export default function OptionsPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to confirm ride");
+        showSnackbar("Erro ao confirmar viagem", "error");
+        return;
       }
 
       router.push("/history?customerId=" + customerId);
+      showSnackbar("Viagem confirmada com sucesso!");
     } catch (error) {
       console.error("Error confirming ride:", error);
+      showSnackbar("Erro ao confirmar viagem", "error");
     }
   };
 
@@ -95,9 +104,12 @@ export default function OptionsPage() {
 
   if (!rideEstimate) {
     return (
-      <div className="text-center py-10">
+      <div className="text-center py-10 flex flex-col items-center	">
         Houve um erro ao estimar sua viagem. Por favor tente novamente mais
         tarde.
+        <Button className="w-48">
+          <Link href="/">Voltar para o ínicio</Link>
+        </Button>
       </div>
     );
   }
@@ -127,7 +139,7 @@ export default function OptionsPage() {
             disabled={!selectedDriverId}
             className="w-full mt-4 bg-blue-500 text-white py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            Confirm Viagem
+            Confirmar Viagem
           </button>
         </div>
       </div>

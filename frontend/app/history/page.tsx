@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { RideHistory } from "../core/dtos/RideHistoryDto";
 import { RideList } from "./components/RideList";
 import { RideHistoryForm } from "./components/RideHistoryForm";
+import { useSnackbar } from "@/components/shared/SnackBarContext";
 
 export default function HistoryPage() {
   const [rideEstimate, setRideEstimate] = useState<RideHistory | undefined>(
@@ -12,6 +13,7 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
+  const showSnackbar = useSnackbar();
 
   const driverId = searchParams.get("driverId");
   const customerId = searchParams.get("customerId");
@@ -37,19 +39,22 @@ export default function HistoryPage() {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to get ride history");
+          showSnackbar("Erro ao obter histórico de viagens", "error");
+          return;
         }
 
         const estimate: RideHistory = await response.json();
         setRideEstimate(estimate);
         setLoading(false);
+        showSnackbar("Histórico de viagens obtido com sucesso!", "info");
       } catch (error) {
         console.error("Error estimating ride:", error);
         setLoading(false);
+        showSnackbar("Erro ao obter histórico de viagens", "error");
       }
     };
     getRideHistory();
-  }, [customerId, driverId]);
+  }, [customerId, driverId, showSnackbar]);
 
   if (loading) {
     return <div className="text-center py-10">Carregando...</div>;
