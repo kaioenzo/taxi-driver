@@ -133,14 +133,15 @@ export default function OptionsPage() {
             drivers={rideEstimate.options}
             onSelectDriver={handleDriverSelect}
             selectedDriverId={selectedDriverId}
+            handleConfirmRide={handleConfirmRide}
           />
-          <button
+          {/* <button
             onClick={handleConfirmRide}
             disabled={!selectedDriverId}
             className="w-full mt-4 bg-blue-500 text-white py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Confirmar Viagem
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

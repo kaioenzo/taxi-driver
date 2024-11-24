@@ -6,6 +6,7 @@ import { DriverCard } from "./DriverCard";
 interface DriversListProps {
   drivers: Driver[];
   onSelectDriver: (driverId: string) => void;
+  handleConfirmRide: () => void;
   selectedDriverId: string | null;
 }
 
@@ -13,6 +14,7 @@ export function DriversList({
   drivers,
   onSelectDriver,
   selectedDriverId,
+  handleConfirmRide,
 }: DriversListProps) {
   return (
     <div className="space-y-4">
@@ -21,6 +23,7 @@ export function DriversList({
         <DriverCard
           key={driver._id}
           driver={driver}
+          handleConfirmRide={handleConfirmRide}
           onSelect={() => onSelectDriver(driver._id)}
           isSelected={selectedDriverId === driver._id}
         />

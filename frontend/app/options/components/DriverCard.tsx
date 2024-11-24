@@ -4,10 +4,16 @@ import React from "react";
 interface DriverCardProps {
   driver: Driver;
   onSelect: () => void;
+  handleConfirmRide: () => void;
   isSelected: boolean;
 }
 
-export function DriverCard({ driver, onSelect, isSelected }: DriverCardProps) {
+export function DriverCard({
+  driver,
+  onSelect,
+  isSelected,
+  handleConfirmRide,
+}: DriverCardProps) {
   return (
     <div
       className={`border rounded-lg p-4 cursor-pointer transition-colors ${
@@ -38,6 +44,13 @@ export function DriverCard({ driver, onSelect, isSelected }: DriverCardProps) {
           &quot;{driver.review.comment}&quot;
         </span>
       </div>
+      <button
+        onClick={handleConfirmRide}
+        disabled={!isSelected}
+        className="w-full mt-4 bg-blue-500 text-white py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+      >
+        Escolher
+      </button>
     </div>
   );
 }
