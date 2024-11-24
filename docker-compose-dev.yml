@@ -12,20 +12,15 @@ services:
       - mongodb_network
 
 
-  backend:
-    container_name: backend
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
     restart: always
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    env_file:
-      - ./.env
-    environment: 
-      MONGO_CONNECTION_URL: mongodb://mongodb:27017
-    volumes:
-      - ./backend:/app
+    environment:
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: 'mongodb'
     ports:
-      - 8080:3000
+      - 8081:8081
     networks:
       - mongodb_network
     depends_on:
