@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -27,6 +28,7 @@ export class RideController {
   }
 
   @Post('estimate')
+  @HttpCode(200)
   estimateRide(
     @Body() estimateRideDto: EstimateRideDto,
   ): Promise<RideEstimateResponse> {
