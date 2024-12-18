@@ -23,7 +23,7 @@ services:
     environment: 
       MONGO_CONNECTION_URL: mongodb://mongodb:27017
     ports:
-      - 8080:3000
+      - 8081:3000
     networks:
       - mongodb_network
     depends_on:
@@ -38,7 +38,7 @@ services:
         GOOGLE_API_KEY: ${GOOGLE_API_KEY}
         NEXT_PUBLIC_BACKEND_URL: http://localhost:8080
     ports:
-      - 80:3001
+      - 4200:3001
     networks:
       - mongodb_network
     depends_on:
